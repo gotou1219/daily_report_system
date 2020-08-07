@@ -50,6 +50,18 @@ public class TopPageIndexServlet extends HttpServlet {
                                   .setMaxResults(15)
                                   .getResultList();
 
+        for(Report report:reports){
+            List<Employee> employeeList = report.getEmployeeList();
+            report.setIine(0);
+            for(Employee emp:employeeList){
+                if(login_employee.getId() == emp.getId()){
+                    report.setIine(1);
+                }
+            }
+            System.out.println(employeeList.size());
+            report.setIine_count(employeeList.size());
+        }
+
         long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
                                      .setParameter("employee", login_employee)
                                      .getSingleResult();

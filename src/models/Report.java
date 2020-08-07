@@ -2,18 +2,24 @@ package models;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Table(name = "reports")
 @NamedQueries({
@@ -45,6 +51,23 @@ public class Report {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
+    @ManyToMany(fetch = FetchType.EAGER,targetEntity=Employee.class)
+    @JoinTable(
+        name = "employee_report",
+        uniqueConstraints= @UniqueConstraint(columnNames={"report_id", "employee_id"}),
+        joinColumns = {@JoinColumn(name = "report_id", referencedColumnName="id")},
+        inverseJoinColumns =  {@JoinColumn(name ="employee_id", referencedColumnName ="id")}
+    )
+      private List<Employee> employeeList = new ArrayList<>();
+
+    public List<Employee> getEmployeeList() {
+        return employeeList;
+    }
+
+    public void setEmployeeList(List<Employee> employeeList) {
+        this.employeeList = employeeList;
+    }
+
     @Column(name = "report_date", nullable = false)
     private Date report_date;
 
@@ -60,6 +83,29 @@ public class Report {
 
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
+
+
+    @Column(name = "iine",  nullable = true)
+    private Integer iine;
+
+    @Column(name = "iine_count", nullable = true)
+    private Integer iine_count;
+
+    public Integer getIine() {
+        return iine;
+    }
+
+    public void setIine(Integer iine) {
+        this.iine = iine;
+    }
+
+    public Integer getIine_count() {
+        return iine_count;
+    }
+
+    public void setIine_count(Integer iine_count) {
+        this.iine_count = iine_count;
+    }
 
     public Integer getId() {
         return id;
